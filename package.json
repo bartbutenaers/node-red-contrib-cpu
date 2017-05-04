@@ -1,0 +1,26 @@
+{
+    "name"         : "node-red-contrib-cpu",
+    "version"      : "0.0.1",
+    "description"  : "A Node Red node to monitor CPU usage",
+    "dependencies": {
+    },
+    "author": {
+        "name": "Bart Butenaers"
+    },
+    "license": "Apache-2.0",
+    "keywords": [ "node-red", "cpu", "performance", "core" ],
+    "bugs": {
+        "url": "https://github.com/bartbutenaers/node-red-contrib-cpu/issues"
+    },
+    "homepage": "https://github.com/bartbutenaers/node-red-contrib-cpu",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bartbutenaers/node-red-contrib-cpu.git"
+    },
+    "node-red"     : {
+        "nodes": {
+            "cpu": "cpu.js"
+        }
+    }
+}
+
