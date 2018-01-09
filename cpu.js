@@ -19,18 +19,20 @@
 
     function CpuNode(n) {
         RED.nodes.createNode(this,n);
-        
+        this.msgCore = (n.msgCore === undefined) ? true : n.msgCore;
+        this.msgOverall = (n.msgOverall === undefined) ? false : n.msgOverall;
         this.name = n.name;
-        this.previousTotalTick = [];
+        this.previousTotalTick = []; 
         this.previousTotalIdle = [];
-
+        
         var node = this;
 
         node.on("input", function(msg) {
             var currentTotalTick = [];
             var currentTotalIdle = [];
-            var outputMessages   = [];
-            
+            var coreOutputMessages = [];
+            var overallUsagePercentage = 0;
+                  
             // Calculate the current CPU usage percentage (for each of the 4 CPU cores)
             for(var i = 0, len = os.cpus().length; i < len; i++) {
                 currentTotalTick.push(0);
@@ -53,15 +55,30 @@
                 var percentageCPU = 100 - ~~(100 * totalIdleDifference / totalTickDifference);
                 
                 // Store the CPU usage % in the payload, and the CPU core name in the topic.
-                outputMessages.push({ payload:percentageCPU , topic:"core_" + (i+1) , model:os.cpus()[i].model, speed:os.cpus()[i].speed });
+                coreOutputMessages.push({ payload:percentageCPU , topic:"core_" + (i+1) , model:os.cpus()[i].model, speed:os.cpus()[i].speed });
+                
+                overallUsagePercentage += percentageCPU;
             }
-
+            
             // Store the current counters for the next calculation
             node.previousTotalTick = currentTotalTick;
             node.previousTotalIdle = currentTotalIdle;
 
-            // Send all CPU usage percentages to the output port
-            node.send([ outputMessages ]);
+            // Send all CPU usage percentages to the output port, if requested
+            if (node.msgCore == true) {
+                node.send([ coreOutputMessages ]);
+            }
+            
+            // Send the overall CPU usage percentage to the output port, if requested
+            if (node.msgOverall == true) {
+                if (coreOutputMessages.length > 0) {
+                    // Calculate the percentage of overal usage.  
+                    // E.g. if we have two cores with 40% and 30% usage, the overal usage will be (40 + 30)/2 = 35%
+                    overallUsagePercentage = overallUsagePercentage / coreOutputMessages.length;
+                }
+                
+                node.send({ payload:overallUsagePercentage , topic:"overall" });
+            }            
         });
     }
 
