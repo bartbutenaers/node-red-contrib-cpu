@@ -21,7 +21,7 @@ When this option is selected, an output message will be generated for each core 
 ![Graph with multiple cores](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_legend.png)
 
 ### Output message for overall cpu usage
-When this option is selected, a single output message will be generated that contains the ***overall*** CPU usage.  The overall CPU usage is calculated as the ***average*** usage of all cores:
+When this option is selected, a single output message will be generated that contains the ***overall*** CPU usage (with topic *'overall'*).  The overall CPU usage is calculated as the ***average*** usage of all cores:
 
 ![Formula](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_formula.png)
 
