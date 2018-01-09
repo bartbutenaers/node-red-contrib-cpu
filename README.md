@@ -13,11 +13,27 @@ An example flow:
 
 ![Flow](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_flow.png)
 
-On the **output port** a separate message will be generated for each core.  Since every core gets it's own `topic` (*core_xxx*), it becomes very easy to display all the cores in a single graph on the dashboard:
+A trigger message should be send to the **input**, every time the CPU usage should be recalculated.  The calculated CPU usage is the average usage since the previous calculation, so the calculated value will become more accurate when the period between successive calculations is small.  ***As a result, it is advised to apply a trigger message every second on the input.***
+
+### Output message for each core
+When this option is selected, an output message will be generated for each core individually.  Since every core gets it's own `topic` (*core_xxx*), it becomes very easy to display all the cores in a single graph on the dashboard:
 
 ![Graph with multiple cores](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_legend.png)
 
-A trigger message should be put on the **input port**, every time the CPU usage should be recalculated.  The calculated CPU usage is the average usage since the previous calculation, so the calculated value will become more accurate when the period between successive calculations is small.  ***As a result, it is advised to apply a trigger message every second on the input port.***
+### Output message for overall cpu usage
+When this option is selected, a single output message will be generated that contains the ***overall*** CPU usage.  The overall CPU usage is calculated as the ***average*** usage of all cores:
+
+![Formula](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_formula.png)
+
+Simon Hailes adviced me to add this option, since the graphs per core can become too *noisy*.  For example, from following graph you might conclude (incorrectly!) that video processing (using the OpenCv library) uses nicely all 4 cores of a Raspberry Pi:
+
+![Formula](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_each_core.png)
+
+However when looking at the overall CPU usage, it becomes clear that only 25% of the Raspberry Pi CPU resources is being used:
+
+![Formula](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_overall.png)
+
+This means that the library uses all 4 available cores, but in total only 25% of the 4 cores...
 
 ## Output message
 An output message will be created for every core.  Every message will contain a number of properties:
