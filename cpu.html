@@ -15,18 +15,35 @@
         category: 'performance',
         color: '#a6bbcf',
         defaults: {
-            name: {value:""}
+            name: {value:""},
+            msgCore: {value:true},
+            msgOverall: {value:false}
         },
         inputs:1,
         outputs:1,
         icon: "cpu.png",
         label: function() {
             return this.name||"CPU usage";
+        },
+        oneditprepare: function() {
+            if (this.msgCore === undefined) {
+                // Select the msgCore checkbox by default, for existing nodes that don't have that field yet.
+                $('#node-input-msgCore').prop('checked',true);
+            }
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="cpu">
+<script type="text/x-red" data-template-name="cpu">    
+    <div class="form-row">
+        <input type="checkbox" id="node-input-msgCore" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-msgCore" style="width:70%;"> Create a message for each core usage</label>
+    </div>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-msgOverall" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-msgOverall" style="width:70%;"> Create a message for overall usage</label>
+    </div>
+    <br>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -43,5 +60,8 @@
         <li><code>topic</code> is the name of the (logical) CPU core (<i>core_xxx</i>)</li>
         <li><code>model</code> is the CPU model</li>
     </ul></p>
+    <p><strong>Create a message for each core usage:</strong><br/>
+    When this option is selected, an output message will be generated for each core separately.  The <code>msg.topic</code> will have <b>"core_"</b> as prefix, followed by an index.</p>
+    <p><strong>Create a message for overall usage:</strong><br/>
+    When this option is selected, a single output message will be generated which aggregates all cores.  The <code>msg.topic</code> will be <b>"overall"</b>.  The <code>msg.payload</code> will contain the <i>overall usage percentage = (sum of usage of all cores) / number of cores</i><.</p>
 </script>
-
