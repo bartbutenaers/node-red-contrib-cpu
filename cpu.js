@@ -21,6 +21,7 @@
         RED.nodes.createNode(this,n);
         this.msgCore = (n.msgCore === undefined) ? true : n.msgCore;
         this.msgOverall = (n.msgOverall === undefined) ? false : n.msgOverall;
+        this.msgArray = (n.msgArray === undefined) ? false : n.msgArray;
         this.name = n.name;
         this.previousTotalTick = []; 
         this.previousTotalIdle = [];
@@ -31,6 +32,7 @@
             var currentTotalTick = [];
             var currentTotalIdle = [];
             var coreOutputMessages = [];
+            var coreArray = [];
             var overallUsagePercentage = 0;
                   
             // Calculate the current CPU usage percentage (for each of the 4 CPU cores)
@@ -55,7 +57,10 @@
                 var percentageCPU = 100 - ~~(100 * totalIdleDifference / totalTickDifference);
                 
                 // Store the CPU usage % in the payload, and the CPU core name in the topic.
-                coreOutputMessages.push({ payload:percentageCPU , topic:"core_" + (i+1) , model:os.cpus()[i].model, speed:os.cpus()[i].speed });
+                coreOutputMessages.push({ payload:percentageCPU, topic:"core_" + (i+1), model:os.cpus()[i].model, speed:os.cpus()[i].speed });
+                
+                // Store the CPU info in an array
+                coreArray.push({ name:"core_" + (i+1), usage:percentageCPU, model:os.cpus()[i].model, speed:os.cpus()[i].speed });
                 
                 overallUsagePercentage += percentageCPU;
             }
@@ -78,6 +83,11 @@
                 }
                 
                 node.send({ payload:overallUsagePercentage , topic:"overall" });
+            }
+
+            // Send all the information of every CPU in an array to the output port, if requested
+            if (node.msgArray == true) {
+                node.send({ payload: coreArray, topic:"all_cores" });
             }            
         });
     }
