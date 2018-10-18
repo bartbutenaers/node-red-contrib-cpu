@@ -17,7 +17,8 @@
         defaults: {
             name: {value:""},
             msgCore: {value:true},
-            msgOverall: {value:false}
+            msgOverall: {value:false},
+            msgArray: {value:false}
         },
         inputs:1,
         outputs:1,
@@ -34,14 +35,18 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="cpu">    
-    <div class="form-row">
-        <input type="checkbox" id="node-input-msgCore" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-msgCore" style="width:70%;"> Create a message for each core usage</label>
-    </div>
+<script type="text/x-red" data-template-name="cpu">  
     <div class="form-row">
         <input type="checkbox" id="node-input-msgOverall" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-msgOverall" style="width:70%;"> Create a message for overall usage</label>
+        <label for="node-input-msgOverall" style="width:70%;"> Send a message for overall usage</label>
+    </div>  
+    <div class="form-row">
+        <input type="checkbox" id="node-input-msgCore" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-msgCore" style="width:70%;"> Send a separate message for each core usage</label>
+    </div>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-msgArray" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-msgArray" style="width:70%;"> Send a single message with array of core usages</label>
     </div>
     <br>
     <div class="form-row">
@@ -53,15 +58,32 @@
 <script type="text/x-red" data-help-name="cpu">
     <p>A node to monitor CPU usage.</p>
     <p>The CPU usage will be calculated for each core individually.  Such a CPU core usage is in fact the average usage since the previous calculation.  Therefore the value will become more accurate when it is calculated more frequently (e.g. when a trigger message is put on the input port every second)!</p>
-    <p>For every core a separate output message will be created, which contains the following properties:
+    <p><strong>Send a message for overall usage:</strong><br/>
+    When this option is selected, a single output message will be send containing the aggregated usage of all cores together:
+    <ul>
+        <li><code>payload</code> is the overall usage percentage (<i>sum of usage of all cores / number of cores</i>)</li>
+        <li><code>speed</code> is processor speed (in MHz)</li>
+        <li><code>topic</code> is a fixed text (<i>overall</i>)</li>
+        <li><code>model</code> is the CPU model</li>
+    </ul></p>
+    <p><strong>Send a separate message for each core usage:</strong><br/>
+    When this option is selected, an output message will be send for each core separately:
     <ul>
         <li><code>payload</code> is the core usage (as a percentage)</li>
         <li><code>speed</code> is processor speed (in MHz)</li>
         <li><code>topic</code> is the name of the (logical) CPU core (<i>core_xxx</i>)</li>
         <li><code>model</code> is the CPU model</li>
     </ul></p>
-    <p><strong>Create a message for each core usage:</strong><br/>
-    When this option is selected, an output message will be generated for each core separately.  The <code>msg.topic</code> will have <b>"core_"</b> as prefix, followed by an index.</p>
-    <p><strong>Create a message for overall usage:</strong><br/>
-    When this option is selected, a single output message will be generated which aggregates all cores.  The <code>msg.topic</code> will be <b>"overall"</b>.  The <code>msg.payload</code> will contain the <i>overall usage percentage = (sum of usage of all cores) / number of cores</i><.</p>
+    <p><strong>Send a single message with array of core usages:</strong><br/>
+    When this option is selected, a single output message will be send containing an array of all core usages:
+    <ul>
+        <li><code>payload</code> is the array with information of all cores:</li>
+            <ul>
+                <li><code>name</code> is the name of the (logical) CPU core (<i>core_xxx</i>)</li>
+                <li><code>usage</code> is the core usage (as a percentage)</li>
+                <li><code>model</code> is the CPU model</li>
+                <li><code>speed</code> is processor speed (in MHz)</li>
+            </ul>
+        <li><code>topic</code> is a fixed text (<i>all_cores</i>)</li>
+    </ul></p>
 </script>
