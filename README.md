@@ -15,12 +15,7 @@ An example flow:
 
 A trigger message should be send to the **input**, every time the CPU usage should be recalculated.  The calculated CPU usage is the average usage since the previous calculation, so the calculated value will become more accurate when the period between successive calculations is small.  ***As a result, it is advised to apply a trigger message every second on the input.***
 
-### Output message for each core
-When this option is selected, an output message will be generated for each core individually.  Since every core gets it's own `topic` (*core_xxx*), it becomes very easy to display all the cores in a single graph on the dashboard:
-
-![Graph with multiple cores](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_legend.png)
-
-### Output message for overall cpu usage
+### Single output message for overall cpu usage
 When this option is selected, a single output message will be generated that contains the ***overall*** CPU usage (with topic *'overall'*).  The overall CPU usage is calculated as the ***average*** usage of all cores:
 
 ![Formula](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_formula.png)
@@ -35,16 +30,35 @@ However when looking at the overall CPU usage, it becomes clear that only 25% of
 
 This means that the library uses all 4 available cores, but in total only 25% of the 4 cores...
 
-## Output message
-An output message will be created for every core.  Every message will contain a number of properties:
-* `payload` : The CPU core usage (as a percentage) since the previous calculation.
-* `topic` : The virtual name *core_xxx* that links a message to a specific core.
-* `model` : The model name of the processor.
-* `speed` : The speed of the processor (in MHz).
+There will be a single output message, containing the overall data of all cores:
++ `msg.payload` is the overall usage percentage (*sum of usage of all cores / number of cores*)
++ `msg.speed` is processor speed (in MHz)
++ `msg.topic` is a fixed text (***overall***)
++ `msg.model` is the CPU model
 
-Following an example of such a message:
+### Separate output message for each core
+When this option is selected, an output message will be generated for each core individually.  Since every core gets it's own `topic` (*core_xxx*), it becomes very easy to display all the cores in a single graph on the dashboard:
+
+![Graph with multiple cores](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_legend.png)
+
+The output message for each core will look like this:
++ `msg.payload` is the core usage (as a percentage)
++ `msg.speed` is processor speed (in MHz)
++ `msg.topic` is the name of the (logical) CPU core (***core_xxx***)
++ `msg.model` is the CPU model
+
+This is an example of such an output message:
 
 ![Debug message](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_debug.png)
+
+### Single output message with array of core usages
+When this option is selected, a single output message will be generated that contains an array of all CPU usages (with topic *'all_cores'*).
++ `msg.payload` is the array with information of all the available cores:
+   + `msg.name` is the name of the (logical) CPU core (***core_xxx***)
+   + `msg.usage` is the core usage (as a percentage)
+   + `msg.model` is the CPU model
+   + `msg.speed` is the processor speed (in MHz)
++ `msg.topic` is a fixed text (***all_cores***)
 
 ## Core definition
 As mentioned before, data will be outputted for every core.  However what does a core represent?  
