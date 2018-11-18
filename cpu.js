@@ -16,12 +16,14 @@
  module.exports = function(RED) {
     var settings = RED.settings;
     var os = require('os');
+    var systemInfo = require('systeminformation');
 
     function CpuNode(n) {
         RED.nodes.createNode(this,n);
         this.msgCore = (n.msgCore === undefined) ? true : n.msgCore;
         this.msgOverall = (n.msgOverall === undefined) ? false : n.msgOverall;
         this.msgArray = (n.msgArray === undefined) ? false : n.msgArray;
+        this.msgTemp = (n.msgTemp === undefined) ? false : n.msgTemp;
         this.name = n.name;
         this.previousTotalTick = []; 
         this.previousTotalIdle = [];
@@ -88,7 +90,14 @@
             // Send all the information of every CPU in an array to the output port, if requested
             if (node.msgArray == true) {
                 node.send({ payload: coreArray, topic:"all_cores" });
-            }            
+            }
+
+            // Send CPU temperature(s), if requested
+            if (node.msgTemp == true) {
+                systemInfo.cpuTemperature(function(data) {
+                    node.send({ payload: data.main, max: data.max, cores:data.cores, topic:"temperature" });
+                });
+            }
         });
     }
 
