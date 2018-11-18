@@ -1,6 +1,6 @@
 {
     "name"         : "node-red-contrib-cpu",
-    "version"      : "0.0.3",
+    "version"      : "0.0.4",
     "description"  : "A Node Red node to monitor CPU usage",
     "dependencies": {
     },
@@ -8,7 +8,7 @@
         "name": "Bart Butenaers"
     },
     "license": "Apache-2.0",
-    "keywords": [ "node-red", "cpu", "performance", "core" ],
+    "keywords": [ "node-red", "cpu", "performance", "core", "temperature", "load" ],
     "bugs": {
         "url": "https://github.com/bartbutenaers/node-red-contrib-cpu/issues"
     },
