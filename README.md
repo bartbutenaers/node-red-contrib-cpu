@@ -61,7 +61,7 @@ When this option is selected, a single output message will be generated that con
 + `msg.topic` is a fixed text (***all_cores***)
 
 ### Single output message with core temperature(s)
-When this option is selected, a single output message will be generated that contains the temperature values (with topic *'temperature'*).
+When this option is selected, a single output message will be generated that contains the temperature values in °C (with topic *'temperature'*).
 
 ![Temperature graph](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-cpu/master/images/cpu_temperature_graph.png)
 
