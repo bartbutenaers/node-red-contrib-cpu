@@ -3,7 +3,7 @@
     "version"      : "0.0.4",
     "description"  : "A Node Red node to monitor CPU usage",
     "dependencies": {
-        "systeminformation": "latest"
+        "systeminformation": ">=3.48.4"
     },
     "author": {
         "name": "Bart Butenaers"
