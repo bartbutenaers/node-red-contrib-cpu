@@ -54,11 +54,22 @@ This is an example of such an output message:
 ### Single output message with array of core usages
 When this option is selected, a single output message will be generated that contains an array of all CPU usages (with topic *'all_cores'*).
 + `msg.payload` is the array with information of all the available cores:
-   + `msg.name` is the name of the (logical) CPU core (***core_xxx***)
-   + `msg.usage` is the core usage (as a percentage)
-   + `msg.model` is the CPU model
-   + `msg.speed` is the processor speed (in MHz)
+   + `name` is the name of the (logical) CPU core (***core_xxx***)
+   + `usage` is the core usage (as a percentage)
+   + `model` is the CPU model
+   + `speed` is the processor speed (in MHz)
 + `msg.topic` is a fixed text (***all_cores***)
+
+### Single output message with core temperature(s)
+When this option is selected, a single output message will be generated that contains the temperature values (with topic *'temperature'*).
+
+The output message will look like this:
++ `msg.payload` is the main (average) temperature
++ `msg.max` is maximum temperature
++ `msg.cores` is an array of temperatures of all cores
++ `msg.topic` is a fixed text (***temperature***)
+
+CAUTION: the temperature values are not available on all systems (e.g. on Sun systems)!  And on some systems the `msg.cores` array will be empty (e.g. on Raspberry Pi 3), but instead the main temperature might be available.
 
 ## Core definition
 As mentioned before, data will be outputted for every core.  However what does a core represent?  
