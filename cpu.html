@@ -18,7 +18,8 @@
             name: {value:""},
             msgCore: {value:true},
             msgOverall: {value:false},
-            msgArray: {value:false}
+            msgArray: {value:false},
+            msgTemp: {value:false}
         },
         inputs:1,
         outputs:1,
@@ -35,7 +36,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="cpu">  
+<script type="text/x-red" data-template-name="cpu"> 
     <div class="form-row">
         <input type="checkbox" id="node-input-msgOverall" style="display: inline-block; width: auto; vertical-align: top;">
         <label for="node-input-msgOverall" style="width:70%;"> Send a message for overall usage</label>
@@ -48,6 +49,10 @@
         <input type="checkbox" id="node-input-msgArray" style="display: inline-block; width: auto; vertical-align: top;">
         <label for="node-input-msgArray" style="width:70%;"> Send a single message with array of core usages</label>
     </div>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-msgTemp" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-msgTemp" style="width:70%;"> Send a single message with core temperature(s)</label>
+    </div> 
     <br>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -86,4 +91,14 @@
             </ul>
         <li><code>topic</code> is a fixed text (<i>all_cores</i>)</li>
     </ul></p>
+    <p><strong>Send a single message with core temperature(s):</strong><br/>
+    When this option is selected, a single output message will be send containing the core temperature(s) in °C:
+    <ul>
+        <li><code>payload</code> is the main (average) temperature</li>
+        <li><code>max</code> is the maximum temperature</li>
+        <li><code>cores</code> is an array of the temperatures of all cores</li>
+        <li><code>topic</code> is a fixed text (<i>temperature</i>)</li>
+    </ul>
+    CAUTION: the temperature information is not available on some systems!
+    </p>
 </script>
