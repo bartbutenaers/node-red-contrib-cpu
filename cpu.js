@@ -17,6 +17,7 @@
     var settings = RED.settings;
     var os = require('os');
     var systemInfo = require('systeminformation');
+    var process = require('process');
 
     function CpuNode(n) {
         RED.nodes.createNode(this,n);
@@ -24,6 +25,7 @@
         this.msgOverall = (n.msgOverall === undefined) ? false : n.msgOverall;
         this.msgArray = (n.msgArray === undefined) ? false : n.msgArray;
         this.msgTemp = (n.msgTemp === undefined) ? false : n.msgTemp;
+        this.msgProcess = (n.msgProcess === undefined) ? false : n.msgProcess;
         this.name = n.name;
         this.previousTotalTick = []; 
         this.previousTotalIdle = [];
@@ -97,6 +99,12 @@
                 systemInfo.cpuTemperature(function(data) {
                     node.send({ payload: data.main, max: data.max, cores:data.cores, topic:"temperature" });
                 });
+            }
+            
+            // Send CPU temperature(s), if requested
+            if (node.msgProcess == true) {
+                const cpuUsageProcess = process.cpuUsage();
+                node.send({ payload: cpuUsageProcess, topic:"process" });
             }
         });
     }

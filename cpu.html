@@ -19,7 +19,8 @@
             msgCore: {value:true},
             msgOverall: {value:false},
             msgArray: {value:false},
-            msgTemp: {value:false}
+            msgTemp: {value:false},
+            msgProcess: {value:false}
         },
         inputs:1,
         outputs:1,
@@ -52,6 +53,10 @@
     <div class="form-row">
         <input type="checkbox" id="node-input-msgTemp" style="display: inline-block; width: auto; vertical-align: top;">
         <label for="node-input-msgTemp" style="width:70%;"> Send a single message with core temperature(s)</label>
+    </div>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-msgProcess" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-msgProcess" style="width:70%;"> Send a single message with CPU of current process</label>
     </div> 
     <br>
     <div class="form-row">
@@ -98,6 +103,14 @@
         <li><code>max</code> is the maximum temperature</li>
         <li><code>cores</code> is an array of the temperatures of all cores</li>
         <li><code>topic</code> is a fixed text (<i>temperature</i>)</li>
+    </ul>
+    CAUTION: the temperature information is not available on some systems!
+    </p>
+    <p><strong>Send a single message with CPU of current process:</strong><br/>
+    When this option is selected, a single output message will be send containing the CPU usage of the current process:
+    <ul>
+        <li><code>payload</code> is the process CPU usage</li>
+        <li><code>topic</code> is a fixed text (<i>process</i>)</li>
     </ul>
     CAUTION: the temperature information is not available on some systems!
     </p>
