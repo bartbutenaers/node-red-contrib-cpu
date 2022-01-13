@@ -36,19 +36,23 @@
             var coreOutputMessages = [];
             var coreArray = [];
             var overallUsagePercentage = 0;
+            
+            // Call the os.cpus() function only once per run for performance reasons.
+            // See https://github.com/bartbutenaers/node-red-contrib-cpu/issues/1#issuecomment-1011535857
+            var cpus = os.cpus();
                   
             // Calculate the current CPU usage percentage (for each of the 4 CPU cores)
-            for(var i = 0, len = os.cpus().length; i < len; i++) {
+            for(var i = 0, len = cpus.length; i < len; i++) {
                 currentTotalTick.push(0);
                 currentTotalIdle.push(0);
                 
                 // Current total number of CPU ticks (spent in user, nice, sys, idle, and irq)
-                for(var type in os.cpus()[i].times) {
-                    currentTotalTick[i] += os.cpus()[i].times[type];
+                for(var type in cpus[i].times) {
+                    currentTotalTick[i] += cpus[i].times[type];
                 }
                 
                 // Current total idle time
-                currentTotalIdle[i] += os.cpus()[i].times.idle;
+                currentTotalIdle[i] += cpus[i].times.idle;
                 
                 // Difference in idle and total time, compared to the previous calculation.
                 // I.e. difference since the last time this node has been triggered!
@@ -59,10 +63,10 @@
                 var percentageCPU = 100 - ~~(100 * totalIdleDifference / totalTickDifference);
                 
                 // Store the CPU usage % in the payload, and the CPU core name in the topic.
-                coreOutputMessages.push({ payload:percentageCPU, topic:"core_" + (i+1), model:os.cpus()[i].model, speed:os.cpus()[i].speed });
+                coreOutputMessages.push({ payload:percentageCPU, topic:"core_" + (i+1), model:cpus[i].model, speed:cpus[i].speed });
                 
                 // Store the CPU info in an array
-                coreArray.push({ name:"core_" + (i+1), usage:percentageCPU, model:os.cpus()[i].model, speed:os.cpus()[i].speed });
+                coreArray.push({ name:"core_" + (i+1), usage:percentageCPU, model:cpus[i].model, speed:cpus[i].speed });
                 
                 overallUsagePercentage += percentageCPU;
             }
